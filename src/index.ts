@@ -21,7 +21,6 @@ export function closeModal(id: string) {
 
 const projectsListUI = document.getElementById("projects-list") as HTMLElement;
 
-
 const projectsManager = new ProjectsManager(projectsListUI);
 
 // Botón para crear nuevo proyecto
@@ -95,6 +94,7 @@ if (projectForm){
         
         projectsManager.updateProject(id,projectData, project)
         projectsManager.setDetailsPage(project)
+
         
         
 
@@ -186,7 +186,8 @@ if (projectTab){
       projectDetails.style.display = "none";
     }
     const projectPage=document.getElementById("projects-page")
-    if (projectPage){
+    if (projectPage){     
+      projectsManager.setProjectPage()
       projectPage.style.display = "flex";
     }
 

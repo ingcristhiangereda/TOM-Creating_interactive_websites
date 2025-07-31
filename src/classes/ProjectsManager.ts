@@ -58,10 +58,8 @@ export class ProjectsManager {
       const index = this.list.findIndex(project => project.name === data.name);
       const id= this.list[index].id;
       const project = this.list[index];
-      console.log("imprimiendo DATA ANTES DE ENTRAR A UPDATEPROJECT")
-      console.log("-----------------------------")
-      console.log(data)
       this.updateProject(id, data,  project)
+ 
     }else{
       const project = new Project(data)
       project.ui.addEventListener("click", () => {
@@ -78,6 +76,27 @@ export class ProjectsManager {
     }
     
   }
+
+  
+  setProjectPage() {
+    const projectsListUI = document.getElementById("projects-list") as HTMLElement;
+    const newUI = document.createElement("div"); // o cualquier contenedor adecuado
+
+    for (const project of this.list) {
+      project.setUI(); // Asegúrate de que este método existe
+      newUI.append(project.ui); // Asegúrate de que project.ui es un HTMLElement
+    }
+
+    this.ui = newUI;
+    
+    projectsListUI.innerHTML = ""; // Limpia el contenido actual
+    projectsListUI.appendChild(this.ui); // Inserta el nuevo contenido
+    
+    console.log("esta terminando setprojectPage")
+    console.log(this.ui)
+    console.log(newUI)
+  }
+
 
   setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details");
@@ -125,7 +144,17 @@ export class ProjectsManager {
 
 
         const form = document.getElementById("new-project-form") as HTMLFormElement;
-        form.reset();
+        form.reset();        
+        // Establecer valores en los campos del formulario
+        (form.elements.namedItem("name") as HTMLInputElement).value = project.name;
+        (form.elements.namedItem("description") as HTMLTextAreaElement).value = project.description;
+        (form.elements.namedItem("userRole") as HTMLSelectElement).value = project.userRole;
+        (form.elements.namedItem("status") as HTMLSelectElement).value = project.status;
+        
+      // Convertir la fecha a formato YYYY-MM-DD para el input type="date"
+        const finishDateInput = form.elements.namedItem("finishDate") as HTMLInputElement;
+        finishDateInput.value = project.finishDate.toISOString().split("T")[0];
+
         form.removeAttribute("data-mode");
         form.removeAttribute("data-project-id");
         showModal("new-project-modal");
@@ -201,9 +230,7 @@ importFromJSON() {
 
         for (const raw of rawProjects) {
           try {
-            console.log("imprimiendo proyecto antes de entrar a new project")
-            console.log("--------------------------------------------------")
-            console.log(raw)
+
             // Asegúrate de que cada proyecto se cree como instancia de Project
             this.newProject({
               ...raw,
@@ -240,9 +267,8 @@ importFromJSON() {
     existingProject.ToDoTask = updatedData.ToDoTask;
     existingProject.ToDoStatus = updatedData.ToDoStatus;
     existingProject.ToDoID = updatedData.ToDoID;
-    console.log("imprimiendo proyecto actualizado")
-    console.log("------------------------------")
-    console.log(existingProject)
+
+    existingProject.setUI()
     existingProject.setDetailsUI()
     existingProject.setToDoUI()
 

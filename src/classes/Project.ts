@@ -72,7 +72,7 @@ export class Project implements IProject {
 
   //creates the project card UI
   setUI() {
-    if (this.ui) {return}
+    // if (this.ui) {return}
     const colors = ["#ca8134", "#4a90e2", "#7ed6df", "#f1c40f", "#9b59b6"];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     this.ui = document.createElement("div")
