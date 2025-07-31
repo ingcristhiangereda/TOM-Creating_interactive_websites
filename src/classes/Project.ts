@@ -12,6 +12,7 @@ export interface IProject {
   ToDoTask: String[]
 	ToDoStatus: String[]
 	ToDoID: String[]
+  id:string
 
 
 }
@@ -43,7 +44,7 @@ export class Project implements IProject {
     this.description = data.description;
     this.status = data.status;
     this.userRole = data.userRole;
-    this.finishDate = new Date(data.finishDate); // asegúrate de convertirlo
+    this.finishDate = new Date(); // asegúrate de convertirlo
 
     // this.ToDoTask = this.ToDoTask || [];
     // this.ToDoStatus = this.ToDoStatus || [];

@@ -41,7 +41,7 @@ export class ProjectsManager {
       ToDoTask: [],
 	    ToDoStatus: [],
 	    ToDoID: [],
-      
+      id:""      
     })
   }
 
@@ -52,14 +52,24 @@ export class ProjectsManager {
     const projectNames = this.list.map((project) => {
       return project.name
     })
+
+    const projectIDs = this.list.map((project) => {
+      return project.id
+    })
     const nameInUse = projectNames.includes(data.name)
+    const IDInUse = projectIDs.includes(data.id)
     if (nameInUse) {
       // throw new Error(`A project with the name "${data.name}" already exists`)
       const index = this.list.findIndex(project => project.name === data.name);
       const id= this.list[index].id;
       const project = this.list[index];
       this.updateProject(id, data,  project)
- 
+    }
+    if(IDInUse){
+      const index = this.list.findIndex(project => project.id === data.id);
+      const id= this.list[index].id;
+      const project = this.list[index];
+      this.updateProject(id, data,  project)
     }else{
       const project = new Project(data)
       project.ui.addEventListener("click", () => {
@@ -80,21 +90,23 @@ export class ProjectsManager {
   
   setProjectPage() {
     const projectsListUI = document.getElementById("projects-list") as HTMLElement;
-    const newUI = document.createElement("div"); // o cualquier contenedor adecuado
-
+    projectsListUI.innerHTML = ""; // Limpia el contenido actual
     for (const project of this.list) {
       project.setUI(); // Asegúrate de que este método existe
-      newUI.append(project.ui); // Asegúrate de que project.ui es un HTMLElement
+      this.ui.append(project.ui); // Asegúrate de que project.ui es un HTMLElement
+      project.ui.addEventListener("click", () => {
+        const projectsPage = document.getElementById("projects-page")
+        const detailsPage = document.getElementById("project-details")
+        if (!(projectsPage && detailsPage)) { return }
+        projectsPage.style.display = "none"
+        detailsPage.style.display = "flex"
+        this.setDetailsPage(project)
+      })
     }
 
-    this.ui = newUI;
-    
-    projectsListUI.innerHTML = ""; // Limpia el contenido actual
-    projectsListUI.appendChild(this.ui); // Inserta el nuevo contenido
-    
-    console.log("esta terminando setprojectPage")
-    console.log(this.ui)
-    console.log(newUI)
+
+
+  
   }
 
 
@@ -151,9 +163,9 @@ export class ProjectsManager {
         (form.elements.namedItem("userRole") as HTMLSelectElement).value = project.userRole;
         (form.elements.namedItem("status") as HTMLSelectElement).value = project.status;
         
-      // Convertir la fecha a formato YYYY-MM-DD para el input type="date"
-        const finishDateInput = form.elements.namedItem("finishDate") as HTMLInputElement;
-        finishDateInput.value = project.finishDate.toISOString().split("T")[0];
+      // // Convertir la fecha a formato YYYY-MM-DD para el input type="date"
+      //   const finishDateInput = form.elements.namedItem("finishDate") as HTMLInputElement;
+      //   finishDateInput.value = project.finishDate.toISOString().split("T")[0];
 
         form.removeAttribute("data-mode");
         form.removeAttribute("data-project-id");
@@ -271,6 +283,7 @@ importFromJSON() {
     existingProject.setUI()
     existingProject.setDetailsUI()
     existingProject.setToDoUI()
+    this.setProjectPage()
 
     
   

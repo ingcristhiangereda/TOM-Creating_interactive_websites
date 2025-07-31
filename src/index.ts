@@ -181,7 +181,7 @@ const projectTab=document.getElementById("projects-tab")
 if (projectTab){
   projectTab.addEventListener("click", function () {
     const projectDetails=document.getElementById("project-details")
-    
+    console.log("imprimiento al tocar carta")
     if (projectDetails){
       projectDetails.style.display = "none";
     }
